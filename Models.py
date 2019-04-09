@@ -9,6 +9,14 @@ class Link:
         self.module_cost = module_cost
         self.link_module = link_module
 
+    def print_link_properties(self):
+        print("Start node: {}, End node: {}, Number of modules: {}, Module cost: {}, Link module: {}"
+              .format(self.start_node,
+                      self.end_node,
+                      self.number_of_modules,
+                      self.module_cost,
+                      self.link_module))
+
 
 # Class representing a single demand
 class Demand:

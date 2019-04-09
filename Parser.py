@@ -25,15 +25,6 @@ def get_links_list_from_file(__net4_string_links):
         __list_of_links.append(
             Link(current_item[0], current_item[1], current_item[2], current_item[3], current_item[4]))
 
-    # Print all items in list
-    for i in range(0, len(__list_of_links)):
-        print("Start node: {}, End node: {}, Number of modules: {}, Module cost: {}, Link module: {}"
-              .format(__list_of_links[i].start_node,
-                      __list_of_links[i].end_node,
-                      __list_of_links[i].number_of_modules,
-                      __list_of_links[i].module_cost,
-                      __list_of_links[i].link_module))
-
     return __list_of_links
 
 
@@ -45,6 +36,7 @@ def get_demands_from_file(__net4_string_demands):
     # List with all demands and demand paths found with regex
     list_demands_demand_paths = re.findall(regex_pattern_demands, __net4_string_demands, re.MULTILINE)
 
+    # Loop through all items found by regex
     for item in list_demands_demand_paths:
         # Split lines
         __current_item = item.splitlines()  # Split each item found by regex by lines
@@ -53,7 +45,7 @@ def get_demands_from_file(__net4_string_demands):
 
         __list_of_demand_paths = list()
 
-        for i in range(2, 2 + __number_of_demand_paths):
+        for i in range(2, 2 + __number_of_demand_paths):  # Start looping at 2, it is first line with demands
             __links_ids = __current_item[i].split()  # Make a list with demand path links ids
             __links_ids.pop(0)  # Delete first element, because it is demand path id
             __list_of_demand_paths.append(DemandPath(i - 1,  # Demand path id (starts with 1)
