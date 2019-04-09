@@ -69,14 +69,5 @@ with open(net4_file_path, "r") as net4_file:
 
 list_of_demands = get_demands_from_file(net4_string_demands)
 
-# Print all items in list
-for ix in range(0, len(list_of_demands)):
-    print("Start node: {}, End node: {}, Demand volume: {}, Number of demand paths: {},"
-          " Demand path 1 id: {}, Demand path 1 links {}"
-          .format(list_of_demands[ix].start_node,
-                  list_of_demands[ix].end_node,
-                  list_of_demands[ix].demand_volume,
-                  list_of_demands[ix].number_of_demand_paths,
-                  list_of_demands[ix].list_of_demand_paths[0].demand_path_id,
-                  list_of_demands[ix].list_of_demand_paths[0].link_id_list
-                  ))
+for y in range (0, len(list_of_demands)):
+    list_of_demands[y].print_demand_properties()
