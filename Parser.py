@@ -82,12 +82,12 @@ with open(net12_2_file_path, "r") as net_file:
     net_string_links, net_string_demands = net_file.read().split("-1")
 
 # List for holdings Link objects, get Link objects from txt string
-# list_of_links = get_links_list_from_file(net4_string_links)
+# list_of_links = get_links_list_from_file(net_string_links)
 
-print(get_number_of_links(net_string_links))
-print(get_number_of_demands(net_string_demands))
+# print(get_number_of_links(net_string_links))
+# print(get_number_of_demands(net_string_demands))
 
 list_of_demands = get_demands_from_file(net_string_demands)
 
-#for y in range(0, len(list_of_demands)):
+# for y in range(0, len(list_of_demands)):
 #    list_of_demands[y].print_demand_properties()
