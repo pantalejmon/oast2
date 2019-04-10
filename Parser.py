@@ -5,19 +5,25 @@ from Models import Link, Demand, DemandPath
 # File path
 net4_file_path = "net4.txt"
 net12_1_file_path = "net12_1.txt"
+net12_2_file_path = "net12_2.txt"
 
 # Patterns for regular expressions
 regex_pattern_links = r'\d{1,2} \d{1,2} \d{1,2} \d{1,2} \d{1,2}'
 regex_pattern_demands = r'\d{1,2} \d{1,2} \d{1,2}\n\d{1,2}\n^[\s\S]*?(?=\n{2,})'
 
+# Use ONLY on second part of file string without GLOBAL modifier (only MULTILINE),
+# it will get first number and number of demands is first in second part of file, after -1
+# Use with re.search()
+regex_pattern_number_of_demands = r'^\d{1,3}$'
+
 
 # Pass a string containing part of file with links to get list of Link objects
-def get_links_list_from_file(__net4_string_links):
+def get_links_list_from_file(__net_string_links):
     # Private variable List for holdings Link objects
     __list_of_links = list()
 
     # Find all matching links, add them to list
-    list_of_link_strings = re.findall(regex_pattern_links, __net4_string_links)
+    list_of_link_strings = re.findall(regex_pattern_links, __net_string_links)
 
     # For each link on list, split values and make a Link object
     for item in list_of_link_strings:
@@ -29,12 +35,12 @@ def get_links_list_from_file(__net4_string_links):
 
 
 # Pass a string containing part of file with demands and demand paths to get list of Demand objects
-def get_demands_from_file(__net4_string_demands):
+def get_demands_from_file(__net_string_demands):
     # Private variable for storing list of demands
     __list_of_demands = list()
 
     # List with all demands and demand paths found with regex
-    list_demands_demand_paths = re.findall(regex_pattern_demands, __net4_string_demands, re.MULTILINE)
+    list_demands_demand_paths = re.findall(regex_pattern_demands, __net_string_demands, re.MULTILINE)
 
     # Loop through all items found by regex
     for item in list_demands_demand_paths:
@@ -59,15 +65,23 @@ def get_demands_from_file(__net4_string_demands):
     return __list_of_demands
 
 
+# Pass second part of file string (splitted by -1)
+def get_number_of_demands(__net_string_demands):
+    __number_of_demands = int(re.search(regex_pattern_number_of_demands, net_string_demands, re.MULTILINE).group())
+    return __number_of_demands
+
+
 # Open txt file
-with open(net4_file_path, "r") as net4_file:
+with open(net4_file_path, "r") as net_file:
     # Split file string to 2 strings, each for links and demands
-    net4_string_links, net4_string_demands = net4_file.read().split("-1")
+    net_string_links, net_string_demands = net_file.read().split("-1")
 
 # List for holdings Link objects, get Link objects from txt string
 # list_of_links = get_links_list_from_file(net4_string_links)
 
-list_of_demands = get_demands_from_file(net4_string_demands)
+print(get_number_of_demands(net_string_demands))
 
-for y in range (0, len(list_of_demands)):
-    list_of_demands[y].print_demand_properties()
+list_of_demands = get_demands_from_file(net_string_demands)
+
+#for y in range(0, len(list_of_demands)):
+#    list_of_demands[y].print_demand_properties()
