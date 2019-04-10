@@ -15,6 +15,7 @@ regex_pattern_demands = r'\d{1,2} \d{1,2} \d{1,2}\n\d{1,2}\n^[\s\S]*?(?=\n{2,})'
 # it will get first number and number of demands is first in second part of file, after -1
 # Use with re.search()
 regex_pattern_number_of_demands = r'^\d{1,3}$'
+regex_pattern_number_of_links = r'^\d{1,3}$'
 
 
 # Pass a string containing part of file with links to get list of Link objects
@@ -65,20 +66,25 @@ def get_demands_from_file(__net_string_demands):
     return __list_of_demands
 
 
-# Pass second part of file string (splitted by -1)
+# Pass first part of file string (splitted by -1) containing links
+def get_number_of_links(__net_string_links):
+    return int(re.search(regex_pattern_number_of_links, __net_string_links, re.MULTILINE).group())
+
+
+# Pass second part of file string (splitted by -1) containing demands
 def get_number_of_demands(__net_string_demands):
-    __number_of_demands = int(re.search(regex_pattern_number_of_demands, net_string_demands, re.MULTILINE).group())
-    return __number_of_demands
+    return int(re.search(regex_pattern_number_of_demands, __net_string_demands, re.MULTILINE).group())
 
 
 # Open txt file
-with open(net4_file_path, "r") as net_file:
+with open(net12_2_file_path, "r") as net_file:
     # Split file string to 2 strings, each for links and demands
     net_string_links, net_string_demands = net_file.read().split("-1")
 
 # List for holdings Link objects, get Link objects from txt string
 # list_of_links = get_links_list_from_file(net4_string_links)
 
+print(get_number_of_links(net_string_links))
 print(get_number_of_demands(net_string_demands))
 
 list_of_demands = get_demands_from_file(net_string_demands)
