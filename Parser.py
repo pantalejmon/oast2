@@ -30,7 +30,11 @@ def get_links_list_from_file(__net_string_links):
     for item in list_of_link_strings:
         current_item = item.split()
         __list_of_links.append(
-            Link(current_item[0], current_item[1], current_item[2], current_item[3], current_item[4]))
+            Link(start_node=current_item[0],
+                 end_node=current_item[1],
+                 number_of_modules=int(current_item[2]),
+                 module_cost=int(current_item[3]),
+                 link_module=int(current_item[4])))
 
     return __list_of_links
 
@@ -41,28 +45,29 @@ def get_demands_from_file(__net_string_demands):
     __list_of_demands = list()
 
     # List with all demands and demand paths found with regex
-    list_demands_demand_paths = re.findall(regex_pattern_demands, __net_string_demands, re.MULTILINE)
+    list_demands_and_demand_paths = re.findall(regex_pattern_demands, __net_string_demands, re.MULTILINE)
 
     # Loop through all items found by regex
-    for item in list_demands_demand_paths:
+    for item in list_demands_and_demand_paths:
         # Split lines
         __current_item = item.splitlines()  # Split each item found by regex by lines
-        __current_item_line1 = __current_item[0].split()  # Line contains start node, end node, demand volume
-        __number_of_demand_paths = int(__current_item[1])
+        __current_item_line1 = __current_item[0].split()  # First line contains start node, end node, demand volume
+        __number_of_demand_paths = int(__current_item[1])  # Second line contains number of demand paths
 
         __list_of_demand_paths = list()
 
-        for i in range(2, 2 + __number_of_demand_paths):  # Start looping at 2, it is first line with demands
+        for i in range(2, 2 + __number_of_demand_paths):  # Start looping at 2, it is the first line with demands
             __links_ids = __current_item[i].split()  # Make a list with demand path links ids
-            __links_ids.pop(0)  # Delete first element, because it is demand path id
+            __links_ids.pop(0)  # Delete first element, it is demand path id, we don't need it on list of link ids
+            # Construct Demand Path object, append it to list of demand paths
             __list_of_demand_paths.append(DemandPath(i - 1,  # Demand path id (starts with 1)
                                                      __links_ids))  # List of demand path links
 
-        __list_of_demands.append(Demand(__current_item_line1[0],  # Start node
-                                        __current_item_line1[1],  # End node
-                                        __current_item_line1[2],  # Demand volume
-                                        __number_of_demand_paths,
-                                        __list_of_demand_paths))
+        __list_of_demands.append(Demand(start_node=__current_item_line1[0],  # Start node
+                                        end_node=__current_item_line1[1],  # End node
+                                        demand_volume=int(__current_item_line1[2]),  # Demand volume
+                                        number_of_demand_paths=int(__number_of_demand_paths),
+                                        list_of_demand_paths=__list_of_demand_paths))
     return __list_of_demands
 
 

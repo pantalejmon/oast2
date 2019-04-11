@@ -12,7 +12,8 @@ with open(Parser.net4_file_path, "r") as net_file:
 
     list_of_demands = Parser.get_demands_from_file(net_string_demands)
 
-    print(list_of_links)
+    for x in range(0, len(list_of_links)):
+        list_of_links[x].print_link_properties()
 
-    # for y in range(0, len(list_of_demands)):
-    #    list_of_demands[y].print_demand_properties()
+    for y in range(0, len(list_of_demands)):
+        list_of_demands[y].print_demand_properties()
