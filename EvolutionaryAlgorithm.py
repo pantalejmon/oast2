@@ -1,5 +1,8 @@
 import random
 
+# Default value for mutation probability
+DEFAULT_MUTATION_PROBABILITY = 0.01
+
 
 # Generate first population from list of Demand objects
 def generate_first_population(__list_of_demands):
@@ -19,8 +22,15 @@ def generate_first_population(__list_of_demands):
 
 
 # Decide and perform mutation on passed chromosome based on mutation probability
-def mutate_chromosome(__list_of_genes, __mutation_probability=0.01):
-    # ToDo: Handle passing probability incorrect range
+def mutate_chromosome(__list_of_genes, __mutation_probability=DEFAULT_MUTATION_PROBABILITY):
+    # Check if passed probability is in range [0;1]
+    if 0 < __mutation_probability <= 1:
+        __mutation_probability = __mutation_probability
+    else:
+        # Passed probability is incorrect, use default value
+        __mutation_probability = DEFAULT_MUTATION_PROBABILITY
+
+    # Number of Genes in passed Chromosome
     __number_of_genes = len(__list_of_genes)
 
     for gene in __list_of_genes:

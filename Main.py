@@ -1,6 +1,6 @@
 import Parser
 
-from EvolutionaryAlgorithm import generate_first_population
+from EvolutionaryAlgorithm import generate_first_population, get_random_boolean_based_on_probability
 
 with open(Parser.net4_file_path, "r") as net_file:
     # Split file string to 2 strings, each for links and demands
@@ -22,3 +22,5 @@ with open(Parser.net4_file_path, "r") as net_file:
 
     for item in generate_first_population(list_of_demands):
         print(item)
+
+    get_random_boolean_based_on_probability(0.1)
