@@ -2,10 +2,31 @@ import random
 
 # Default value for mutation probability
 DEFAULT_MUTATION_PROBABILITY = 0.01
+DEFAULT_POPULATION_SIZE = 4
 
 
-# Generate first population from list of Demand objects
-def generate_first_population(__list_of_demands):
+# Generate first population as List of Chromosomes
+def generate_first_population(list_of_demands, population_size_int=DEFAULT_POPULATION_SIZE):
+    # Check if provided population size is correct
+    if isinstance(population_size_int, int):
+        population_size_int = population_size_int
+        print("Population size set to: {}".format(population_size_int))
+    else:
+        population_size_int = DEFAULT_POPULATION_SIZE
+        print("Provided incorrect population size, using default value: {}".format(DEFAULT_POPULATION_SIZE))
+
+    first_population_list = list()
+
+    # Generate chromosomes number same as provided population size
+    for i in range(0, population_size_int):
+        first_population_list.append(generate_chromosome(list_of_demands))
+
+    print("First population:")
+    return first_population_list
+
+
+# Generate chromosome from list of Demand objects
+def generate_chromosome(__list_of_demands):
     list_of_genes = list()  # Chromosome - empty list for appending Genes
     for item in __list_of_demands:
         __demand_volume = item.demand_volume  # Get demand volume for current demand
