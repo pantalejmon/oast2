@@ -2,7 +2,8 @@ import unittest
 
 from Parser import net4_file_path, net12_1_file_path, net12_2_file_path
 from Parser import get_number_of_demands, get_demands_from_file
-from EvolutionaryAlgorithm import generate_chromosome, generate_first_population
+from EvolutionaryAlgorithm import generate_chromosome, generate_first_population,\
+    crossover_chromosomes
 
 # Open net4 text file, split into 2 parts by -1
 with open(net4_file_path, "r") as net4_file:
@@ -62,3 +63,34 @@ class TestEvolutionaryAlgorithm(unittest.TestCase):
         for chromosome in first_population:
             for gene in chromosome.list_of_genes:
                 self.assertEqual(gene.demand_volume, sum(gene.list_of_alleles))
+
+    # Check if new population after crossovers has correct size
+    def test_population_size_after_crossover_net4(self):
+        list_of_demands = get_demands_from_file(net4_string_demands)
+        first_population = generate_first_population(list_of_demands)
+        first_population_length = len(first_population)
+        new_population = crossover_chromosomes(first_population)
+        if len(first_population) % 2 == 0:
+            self.assertEqual(first_population_length * 2, len(new_population))
+        else:
+            self.assertEqual(first_population_length * 2 - 1, len(new_population))
+
+    def test_population_size_after_crossover_net12_1(self):
+        list_of_demands = get_demands_from_file(net12_1_string_demands)
+        first_population = generate_first_population(list_of_demands)
+        first_population_length = len(first_population)
+        new_population = crossover_chromosomes(first_population)
+        if len(first_population) % 2 == 0:
+            self.assertEqual(first_population_length * 2, len(new_population))
+        else:
+            self.assertEqual(first_population_length * 2 - 1, len(new_population))
+
+    def test_population_size_after_crossover_net12_2(self):
+        list_of_demands = get_demands_from_file(net12_2_string_demands)
+        first_population = generate_first_population(list_of_demands)
+        first_population_length = len(first_population)
+        new_population = crossover_chromosomes(first_population)
+        if len(first_population) % 2 == 0:
+            self.assertEqual(first_population_length * 2, len(new_population))
+        else:
+            self.assertEqual(first_population_length * 2 - 1, len(new_population))
