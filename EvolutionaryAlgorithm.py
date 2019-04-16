@@ -1,5 +1,7 @@
 import random
 
+from Models import Gene, Chromosome
+
 # Default value for mutation probability
 DEFAULT_MUTATION_PROBABILITY = 0.01
 DEFAULT_POPULATION_SIZE = 4
@@ -15,7 +17,7 @@ def generate_first_population(list_of_demands, population_size_int=DEFAULT_POPUL
         population_size_int = DEFAULT_POPULATION_SIZE
         print("Provided incorrect population size, using default value: {}".format(DEFAULT_POPULATION_SIZE))
 
-    first_population_list = list()
+    first_population_list = list()  # List of Chromosome objects
 
     # Generate chromosomes number same as provided population size
     for i in range(0, population_size_int):
@@ -26,24 +28,26 @@ def generate_first_population(list_of_demands, population_size_int=DEFAULT_POPUL
 
 
 # Generate chromosome from list of Demand objects
-def generate_chromosome(__list_of_demands):
-    list_of_genes = list()  # Chromosome - empty list for appending Genes
-    for item in __list_of_demands:
-        __demand_volume = item.demand_volume  # Get demand volume for current demand
-        __number_of_demand_paths = item.number_of_demand_paths  # Length of Gene represented by list
+def generate_chromosome(list_of_demands):
+    list_of_genes = list()  # Empty list for appending Genes
+    for item in list_of_demands:
+        demand_volume = item.demand_volume  # Get demand volume for current demand
+        number_of_demand_paths = item.number_of_demand_paths  # Length of Gene represented by list
         # ToDo: Implement random generation of Genes for first generation
-        gene = list()
-        gene.append(__demand_volume)
-        for x in range(1, __number_of_demand_paths):
-            gene.append(0)
+        list_of_alleles = list()  # List of Int representing alleles in single Gene
+        list_of_alleles.append(demand_volume)
+        for x in range(1, number_of_demand_paths):
+            list_of_alleles.append(0)
 
-        list_of_genes.append(gene)
+        list_of_genes.append(Gene(list_of_alleles, demand_volume))
 
-    return list_of_genes
+    # Create and return chromosome instance
+    chromosome = Chromosome(list_of_genes, 1)  # ToDo: implement, calculate and pass fitness
+    return chromosome
 
 
 # Decide and perform mutation on passed chromosome based on mutation probability
-def mutate_chromosome(__list_of_genes, __mutation_probability=DEFAULT_MUTATION_PROBABILITY):
+def mutate_chromosome(chromosome, __mutation_probability=DEFAULT_MUTATION_PROBABILITY):
     # Check if passed probability is in range [0;1]
     if 0 < __mutation_probability <= 1:
         __mutation_probability = __mutation_probability
@@ -52,9 +56,11 @@ def mutate_chromosome(__list_of_genes, __mutation_probability=DEFAULT_MUTATION_P
         __mutation_probability = DEFAULT_MUTATION_PROBABILITY
 
     # Number of Genes in passed Chromosome
-    __number_of_genes = len(__list_of_genes)
+    __number_of_genes = len(chromosome.list_of_genes)
 
-    for gene in __list_of_genes:
+    print("Performing mutation")
+
+    for gene in chromosome.list_of_genes:
         # For each gene on the list, decide if mutation will be performed
         if get_random_boolean_based_on_probability(__mutation_probability):
             # Perform mutation
@@ -62,10 +68,10 @@ def mutate_chromosome(__list_of_genes, __mutation_probability=DEFAULT_MUTATION_P
             __first_gene_value_to_swap = random.randint(0, __number_of_genes)
             __second_gene_value_to_swap = random.randint(0, __number_of_genes)
             # ToDO: handle when selected genes are the same or first is = 0
-            if gene[__first_gene_value_to_swap] > 0:
+            if gene.list_of_alleles[__first_gene_value_to_swap] > 0:
                 # Shift one unit demand from one gene to another
-                gene[__first_gene_value_to_swap] -= 1
-                gene[__second_gene_value_to_swap] += 1
+                gene.list_of_alleles[__first_gene_value_to_swap] -= 1
+                gene.list_of_alleles[__second_gene_value_to_swap] += 1
         else:
             return
 

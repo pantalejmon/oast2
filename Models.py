@@ -51,3 +51,21 @@ class DemandPath:
         print("Demand path id: {}, Demand path links ids list: {}".format(
             self.demand_path_id,
             self.link_id_list))
+
+
+# Representation of single Gene
+class Gene:
+
+    def __init__(self, list_of_alleles, demand_volume):
+        self.list_of_alleles = list_of_alleles  # as list of Int
+        # Sum of all values on list of alleles should be the same as demand_volume
+        self.demand_volume = demand_volume  # as Int
+
+
+# Representation of single Chromosome used is Evolutionary Algorithm
+class Chromosome:
+
+    # Values specific to instance
+    def __init__(self, list_of_genes, fitness):
+        self.list_of_genes = list_of_genes  # as list of Int
+        self.fitness = fitness  # as Int
