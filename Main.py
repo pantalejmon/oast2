@@ -1,6 +1,6 @@
 import Parser
 
-from EvolutionaryAlgorithm import generate_first_population
+from EvolutionaryAlgorithm import generate_first_population, mutate_chromosome, crossover_chromosomes
 
 with open(Parser.net4_file_path, "r") as net_file:
     # Split file string to 2 strings, each for links and demands
@@ -20,6 +20,17 @@ with open(Parser.net4_file_path, "r") as net_file:
     # for y in range(0, len(list_of_demands)):
     #     list_of_demands[y].print_demand_properties()
 
-    for item in generate_first_population(list_of_demands, 6):
+    first_population = generate_first_population(list_of_demands, 3)
+
+    for item in first_population:
+        print('Genes of current chromosome')
+        for gene in item.list_of_genes:
+            print(gene.list_of_alleles)
+
+    new_population = crossover_chromosomes(first_population)
+
+    print("------------ NEW POPULATION --------------")
+    for item in new_population:
+        print('Genes of current chromosome')
         for gene in item.list_of_genes:
             print(gene.list_of_alleles)

@@ -55,25 +55,57 @@ def mutate_chromosome(chromosome, __mutation_probability=DEFAULT_MUTATION_PROBAB
         # Passed probability is incorrect, use default value
         __mutation_probability = DEFAULT_MUTATION_PROBABILITY
 
-    # Number of Genes in passed Chromosome
-    __number_of_genes = len(chromosome.list_of_genes)
-
-    print("Performing mutation")
-
     for gene in chromosome.list_of_genes:
         # For each gene on the list, decide if mutation will be performed
         if get_random_boolean_based_on_probability(__mutation_probability):
+            # Number of Alleles in passed Chromosome
+            __number_of_alleles = len(gene.list_of_alleles)
             # Perform mutation
+            print("Performing mutation")
             # Randomly select 2 gene values to mutate
-            __first_gene_value_to_swap = random.randint(0, __number_of_genes)
-            __second_gene_value_to_swap = random.randint(0, __number_of_genes)
+            __first_gene_value_to_swap = random.randint(0, __number_of_alleles)
+            __second_gene_value_to_swap = random.randint(0, __number_of_alleles)
             # ToDO: handle when selected genes are the same or first is = 0
-            if gene.list_of_alleles[__first_gene_value_to_swap] > 0:
+            if gene.list_of_alleles[__first_gene_value_to_swap - 1] > 0:
                 # Shift one unit demand from one gene to another
-                gene.list_of_alleles[__first_gene_value_to_swap] -= 1
-                gene.list_of_alleles[__second_gene_value_to_swap] += 1
+                gene.list_of_alleles[__first_gene_value_to_swap - 1] -= 1
+                gene.list_of_alleles[__second_gene_value_to_swap - 1] += 1
         else:
             return
+
+
+# Perform crossover, return list with passed chromosomes and offsprings
+# ToDo: Best chromosomes should have higher probability to become parents
+def crossover_chromosomes(list_of_chromosomes):
+    # Perform crossovers
+    list_of_parents_and_offsprings = list()
+    # Add all chromosomes from passed list, later we will be adding only the offsprings
+    list_of_parents_and_offsprings += list_of_chromosomes
+
+    while len(list_of_chromosomes) >= 2:
+        # Take parents from the list
+        first_parent_genes = list_of_chromosomes.pop(0).list_of_genes
+        second_parent_genes = list_of_chromosomes.pop(0).list_of_genes
+        print(first_parent_genes)
+        print(second_parent_genes)
+
+        number_of_genes_from_first_parent = random.randint(0, len(first_parent_genes))
+
+        first_offspring_genes = list()
+        first_offspring_genes += first_parent_genes[:number_of_genes_from_first_parent]
+        first_offspring_genes += second_parent_genes[number_of_genes_from_first_parent:]
+        list_of_parents_and_offsprings.append(Chromosome(first_offspring_genes,
+                                                         3))  # ToDo: calculate fitness
+        print(first_offspring_genes)
+
+        second_offspring_genes = list()
+        second_offspring_genes += second_parent_genes[:number_of_genes_from_first_parent]
+        second_offspring_genes += first_parent_genes[number_of_genes_from_first_parent:]
+        list_of_parents_and_offsprings.append(Chromosome(second_offspring_genes,
+                                                         3))  # ToDo: calculate fitness
+        print(second_offspring_genes)
+
+    return list_of_parents_and_offsprings
 
 
 # Get boolean value based on passed probability [0-1]
