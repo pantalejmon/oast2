@@ -1,6 +1,13 @@
 import Parser
+import random
 
 from EvolutionaryAlgorithm import generate_first_population, mutate_chromosome, crossover_chromosomes
+
+# Seed for first use of random functions
+DEFAULT_RANDOM_SEED = 9
+
+# Set random seed before first use
+random.seed(DEFAULT_RANDOM_SEED)
 
 with open(Parser.net4_file_path, "r") as net_file:
     # Split file string to 2 strings, each for links and demands

@@ -3,7 +3,6 @@ import random
 from Models import Gene, Chromosome
 
 # Default values
-DEFAULT_RANDOM_SEED = 9
 DEFAULT_MUTATION_PROBABILITY = 0.01
 DEFAULT_POPULATION_SIZE = 4
 DEFAULT_CROSSOVER_PROBABILITY = 0.10
@@ -65,9 +64,7 @@ def mutate_chromosome(chromosome, __mutation_probability=DEFAULT_MUTATION_PROBAB
             # Perform mutation
             print("Performing mutation")
             # Randomly select 2 gene values to mutate
-            random.seed(DEFAULT_RANDOM_SEED)
             __first_gene_value_to_swap = random.randint(0, __number_of_alleles)
-            random.seed(DEFAULT_RANDOM_SEED)
             __second_gene_value_to_swap = random.randint(0, __number_of_alleles)
             # ToDO: handle when selected genes are the same or first is = 0
             if gene.list_of_alleles[__first_gene_value_to_swap - 1] > 0:
@@ -99,7 +96,6 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
         second_parent_genes = list_of_chromosomes.pop(0).list_of_genes
 
         # ToDo: Use crossover probability to determine if crossover happens
-        random.seed(DEFAULT_RANDOM_SEED)
         number_of_genes_from_first_parent = random.randint(0, len(first_parent_genes))
 
         first_offspring_genes = list()
@@ -121,7 +117,6 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
 
 # Get boolean value based on passed probability [0-1]
 def get_random_boolean_based_on_probability(probability):
-    random.seed(DEFAULT_RANDOM_SEED)
     value = random.random()
     print("Random value: {}".format(value))
     return value < probability
