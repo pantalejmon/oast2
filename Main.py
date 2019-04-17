@@ -27,6 +27,10 @@ with open(Parser.net4_file_path, "r") as net_file:
         for gene in item.list_of_genes:
             print(gene.list_of_alleles)
 
+    for chromosome in first_population:
+        for i in range(0, 1000):
+            mutate_chromosome(chromosome, 0.2)
+
     new_population = crossover_chromosomes(first_population)
 
     print("------------ NEW POPULATION --------------")
