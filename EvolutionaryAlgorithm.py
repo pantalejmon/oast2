@@ -34,16 +34,24 @@ def generate_chromosome(list_of_demands):
     for item in list_of_demands:
         demand_volume = item.demand_volume  # Get demand volume for current demand
         number_of_demand_paths = item.number_of_demand_paths  # Length of Gene represented by list
-        # ToDo: Implement random generation of Genes for first generation
-        list_of_alleles = list()  # List of Int representing alleles in single Gene
-        list_of_alleles.append(demand_volume)
-        for x in range(1, number_of_demand_paths):
-            list_of_alleles.append(0)
+        # List of integers for storing alleles of single Gene, initialize it with zeroes
+        list_of_alleles = [0] * number_of_demand_paths
 
+        demand_to_assign = demand_volume
+        # Randomly assign demand_volume to alleles in Gene
+        while demand_to_assign > 0:
+            # Choose which allele will be incremented in this loop transition
+            allele_to_increment = random.randint(0, number_of_demand_paths - 1)
+            # Increment allele value
+            list_of_alleles[allele_to_increment] += 1
+            # Decrement demand volume left
+            demand_to_assign -= 1
+
+        # Add generated Gene to Chromosome
         list_of_genes.append(Gene(list_of_alleles, demand_volume))
 
     # Create and return chromosome instance
-    chromosome = Chromosome(list_of_genes, 1)  # ToDo: implement, calculate and pass fitness
+    chromosome = Chromosome(list_of_genes, calculate_fitness())  # ToDo: implement, calculate and pass fitness
     return chromosome
 
 
@@ -82,7 +90,7 @@ def mutate_chromosome(chromosome, __mutation_probability=DEFAULT_MUTATION_PROBAB
 
 
 # Perform crossover, return list with passed chromosomes and offsprings
-# ToDo: Best chromosomes should have higher probability to become parents
+# ToDo: Best chromosomes should have higher probability to become parents (sort list of chromosomes by fitness?)
 def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CROSSOVER_PROBABILITY):
     # Check if passed probability is in range [0;1]
     if 0 < crossover_probability <= 1:
@@ -108,17 +116,23 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
         first_offspring_genes += first_parent_genes[:number_of_genes_from_first_parent]
         first_offspring_genes += second_parent_genes[number_of_genes_from_first_parent:]
         list_of_parents_and_offsprings.append(Chromosome(first_offspring_genes,
-                                                         3))  # ToDo: calculate fitness
+                                                         calculate_fitness()))  # ToDo: calculate fitness
         print(first_offspring_genes)
 
         second_offspring_genes = list()
         second_offspring_genes += second_parent_genes[:number_of_genes_from_first_parent]
         second_offspring_genes += first_parent_genes[number_of_genes_from_first_parent:]
         list_of_parents_and_offsprings.append(Chromosome(second_offspring_genes,
-                                                         3))  # ToDo: calculate fitness
+                                                         calculate_fitness()))  # ToDo: calculate fitness
         print(second_offspring_genes)
 
     return list_of_parents_and_offsprings
+
+
+# Calculate and return fitness for passed Chromosome list of genes
+def calculate_fitness():
+    # ToDo: Implementation
+    return 5
 
 
 # Get boolean value based on passed probability [0-1]
