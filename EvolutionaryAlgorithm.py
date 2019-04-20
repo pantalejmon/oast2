@@ -61,16 +61,22 @@ def mutate_chromosome(chromosome, __mutation_probability=DEFAULT_MUTATION_PROBAB
         if get_random_boolean_based_on_probability(__mutation_probability):
             # Number of Alleles in passed Chromosome
             __number_of_alleles = len(gene.list_of_alleles)
-            # Perform mutation
-            print("Performing mutation")
+
             # Randomly select 2 gene values to mutate
-            __first_gene_value_to_swap = random.randint(0, __number_of_alleles)
-            __second_gene_value_to_swap = random.randint(0, __number_of_alleles)
-            # ToDO: handle when selected genes are the same or first is = 0
-            if gene.list_of_alleles[__first_gene_value_to_swap - 1] > 0:
-                # Shift one unit demand from one gene to another
-                gene.list_of_alleles[__first_gene_value_to_swap - 1] -= 1
-                gene.list_of_alleles[__second_gene_value_to_swap - 1] += 1
+            __first_gene_value_to_swap = random.randint(0, __number_of_alleles - 1)
+            __second_gene_value_to_swap = random.randint(0, __number_of_alleles - 1)
+
+            # If allele to decrement = 0, choose another
+            while gene.list_of_alleles[__first_gene_value_to_swap] <= 0:
+                __first_gene_value_to_swap = random.randint(0, __number_of_alleles - 1)
+
+            # When allele indexes are the same, choose new index for second allele index
+            while __second_gene_value_to_swap == __first_gene_value_to_swap:
+                __second_gene_value_to_swap = random.randint(0, __number_of_alleles - 1)
+
+            # Shift one unit demand from one gene to another
+            gene.list_of_alleles[__first_gene_value_to_swap] -= 1
+            gene.list_of_alleles[__second_gene_value_to_swap] += 1
         else:
             return
 
@@ -117,6 +123,4 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
 
 # Get boolean value based on passed probability [0-1]
 def get_random_boolean_based_on_probability(probability):
-    value = random.random()
-    print("Random value: {}".format(value))
-    return value < probability
+    return random.random() < probability

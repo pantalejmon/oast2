@@ -4,7 +4,7 @@ import random
 from EvolutionaryAlgorithm import generate_first_population, mutate_chromosome, crossover_chromosomes
 
 # Seed for first use of random functions
-DEFAULT_RANDOM_SEED = 9
+DEFAULT_RANDOM_SEED = 6
 
 # Set random seed before first use
 random.seed(DEFAULT_RANDOM_SEED)
@@ -35,13 +35,18 @@ with open(Parser.net4_file_path, "r") as net_file:
             print(gene.list_of_alleles)
 
     for chromosome in first_population:
-        for i in range(0, 1000):
-            mutate_chromosome(chromosome, 0.2)
+        mutate_chromosome(chromosome, 0.6)
 
-    new_population = crossover_chromosomes(first_population)
+    for item in first_population:
+        print('Genes of current chromosome')
+        for gene in item.list_of_genes:
+            print(gene.list_of_alleles)
 
+    #new_population = crossover_chromosomes(first_population)
+'''
     print("------------ NEW POPULATION --------------")
     for item in new_population:
         print('Genes of current chromosome')
         for gene in item.list_of_genes:
             print(gene.list_of_alleles)
+'''
