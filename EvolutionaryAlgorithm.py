@@ -101,7 +101,7 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
 
     # Perform crossovers
     list_of_parents_and_offsprings = list()
-    # Add all chromosomes from passed list, later we will be adding only the offsprings
+    # Add all chromosomes from passed list (parents), later we will be adding only the offsprings
     list_of_parents_and_offsprings += list_of_chromosomes
 
     while len(list_of_chromosomes) >= 2:
@@ -111,25 +111,27 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
 
         # Determine if crossover happens for each pair of parents
         if get_random_boolean_based_on_probability(crossover_probability):
-            # Crossover happens
-            number_of_genes_from_first_parent = random.randint(0, len(first_parent_genes))
 
             first_offspring_genes = list()
-            first_offspring_genes += first_parent_genes[:number_of_genes_from_first_parent]
-            first_offspring_genes += second_parent_genes[number_of_genes_from_first_parent:]
+            second_offspring_genes = list()
+
+            # Loop through genes and create offsprings
+            for i in range(0, len(first_parent_genes)):
+                # Decide which gene is taken from which parent
+                if get_random_boolean_based_on_probability(0.5):
+                    # First offspring gets gene from first parent, second offspring from second parent
+                    first_offspring_genes.append(first_parent_genes[i])
+                    second_offspring_genes.append(second_parent_genes[i])
+                else:
+                    # First offspring gets gene from second parent, second offspring from first parent
+                    first_offspring_genes.append(second_parent_genes[i])
+                    second_offspring_genes.append(first_parent_genes[i])
+
+            # Add offsprings to list
             list_of_parents_and_offsprings.append(Chromosome(first_offspring_genes,
                                                              calculate_fitness()))  # ToDo: calculate fitness
-            print(first_offspring_genes)
-
-            second_offspring_genes = list()
-            second_offspring_genes += second_parent_genes[:number_of_genes_from_first_parent]
-            second_offspring_genes += first_parent_genes[number_of_genes_from_first_parent:]
             list_of_parents_and_offsprings.append(Chromosome(second_offspring_genes,
                                                              calculate_fitness()))  # ToDo: calculate fitness
-            print(second_offspring_genes)
-        else:
-            # Crossover not happened for pair of parents
-            return
 
     return list_of_parents_and_offsprings
 

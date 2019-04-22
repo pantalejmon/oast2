@@ -4,12 +4,12 @@ import random
 from EvolutionaryAlgorithm import generate_first_population, mutate_chromosome, crossover_chromosomes
 
 # Seed for first use of random functions
-DEFAULT_RANDOM_SEED = 6
+DEFAULT_RANDOM_SEED = 7
 
 # Set random seed before first use
 random.seed(DEFAULT_RANDOM_SEED)
 
-with open(Parser.net4_file_path, "r") as net_file:
+with open(Parser.net12_2_file_path, "r") as net_file:
     # Split file string to 2 strings, each for links and demands
     net_string_links, net_string_demands = net_file.read().split("-1")
 
@@ -33,20 +33,20 @@ with open(Parser.net4_file_path, "r") as net_file:
         print('Genes of current chromosome')
         for gene in item.list_of_genes:
             print(gene.list_of_alleles)
-'''
-    for chromosome in first_population:
-        mutate_chromosome(chromosome, 0.6)
 
-    for item in first_population:
-        print('Genes of current chromosome')
-        for gene in item.list_of_genes:
-            print(gene.list_of_alleles)
-'''
-    #new_population = crossover_chromosomes(first_population)
-'''
+  #  for chromosome in first_population:
+   #     mutate_chromosome(chromosome, 0.6)
+
+   # for item in first_population:
+    #    print('Genes of current chromosome')
+     #   for gene in item.list_of_genes:
+      #      print(gene.list_of_alleles)
+
+    new_population = crossover_chromosomes(first_population, 0.1)
+
     print("------------ NEW POPULATION --------------")
     for item in new_population:
         print('Genes of current chromosome')
         for gene in item.list_of_genes:
             print(gene.list_of_alleles)
-'''
+
