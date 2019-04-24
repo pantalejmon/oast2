@@ -2,6 +2,7 @@ import Parser
 import random
 
 from EvolutionaryAlgorithm import generate_first_population, mutate_chromosome, crossover_chromosomes
+from BruteForceAlgorithm import  run_brute_force
 
 # Seed for first use of random functions
 DEFAULT_RANDOM_SEED = 7
@@ -50,3 +51,5 @@ with open(Parser.net12_2_file_path, "r") as net_file:
         for gene in item.list_of_genes:
             print(gene.list_of_alleles)
 
+
+    run_brute_force(list_of_demands)
