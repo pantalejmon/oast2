@@ -51,5 +51,11 @@ with open(Parser.net12_2_file_path, "r") as net_file:
         for gene in item.list_of_genes:
             print(gene.list_of_alleles)
 
-
-    run_brute_force(list_of_demands)
+with open(Parser.net4_file_path, "r") as net_file:
+    # Split file string to 2 strings, each for links and demands
+    net_string_links, net_string_demands = net_file.read().split("-1")
+    # List for holdings Link objects, get Link objects from txt string
+    links = Parser.get_links_list_from_file(net_string_links)
+    demands = Parser.get_demands_from_file(net_string_demands)
+    #Zakomentowane bo muli i do poprawy jeszcze
+    #run_brute_force(demands,links)
