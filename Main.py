@@ -58,4 +58,4 @@ with open(Parser.net4_file_path, "r") as net_file:
     links = Parser.get_links_list_from_file(net_string_links)
     demands = Parser.get_demands_from_file(net_string_demands)
     #Zakomentowane bo muli i do poprawy jeszcze
-    #run_brute_force(demands,links)
+    run_brute_force(demands,links)
