@@ -6,13 +6,13 @@ from FileWrite import FileWriter
 
 class BT:
     def __init__(self, demands):
-        print("Brute force starts...")
-        self.link_lambda = []
-        self.link_fibre = []
+        print("[BF] Bruteforce start")
+        self.link_module = []
+        self.link_wire = []
         self.res_list = []
         self.solutions = {}
         self.solution = []
-        self.population = []
+        self.all = []
         self.best_loads = []
         self.cost_function = []
         self.best_solutions = []
@@ -22,18 +22,17 @@ class BT:
             self.solutions[i+1] = []
 
     def start(self, demands, links):
-
         print("[BF] Uruchomiono procedure BF")
         # for l in range(len(demands)):
         #     demands[l].print_demand_properties()
         for l in range(len(links)):
             links[l].print_link_properties()
-        self.get_lambda_fibres(links)
+        self.load_data(links)
         self.link_in_demand(demands, links)
         k = list(self.solutions.keys())
         i = 0
         for demand in demands:
-            self.partial(int(demand.demand_volume), int(
+            self.rec(int(demand.demand_volume), int(
                 demand.demand_volume), 0, demand.number_of_demand_paths-1, [])
             self.solutions[k[i]] = copy.deepcopy(self.solution)
             del self.solution[:]
@@ -44,52 +43,52 @@ class BT:
         self.write_all()
         return
 
-    def partial(self, volume, max_volume, level, max_level, trace):
+    def rec(self, volume, max_volume, level, max_level, trace):
         volumes = list(range(int(volume), -1, -1))
         for i in volumes:
             t = copy.deepcopy(trace)
             t.append(i)
             if level < max_level:
-                self.partial(volume-i, max_volume, level+1, max_level, t)
+                self.rec(volume-i, max_volume, level+1, max_level, t)
             elif sum(t) == max_volume:
                 self.solution.append(t)
 
-    def get_lambda_fibres(self, links):
+    def load_data(self, links):
         for link in links:
-            self.link_lambda.append(int(link.link_module))
-            self.link_fibre.append(int(link.number_of_modules))
+            self.link_module.append(int(link.link_module))
+            self.link_wire.append(int(link.number_of_modules))
         print("[BF] Wczytuje dane")
 
     def getAllSolutionsIter(self):
         print("All solution...")
         d_keys = list(self.solutions.keys())
         print("d_keys: ", len(d_keys))
-        self.population = copy.deepcopy(self.solutions[d_keys[0]])
+        self.all = copy.deepcopy(self.solutions[d_keys[0]])
         l = []
         i = 0
-        print("population: ", len(self.population))
+        print("all: ", len(self.all))
         for d in d_keys[1:]:
-            for e in self.population:
+            for e in self.all:
                 for u in self.solutions[d]:
                     if i == 0:
                         l.append([e] + [u])
                     else:
                         l.append(e + [u])
-            del self.population[:]
+            del self.all[:]
             i = 1
             for e in l:
-                self.population.append(e)
+                self.all.append(e)
             del l[:]
 
     def find_write_best(self):
         print("[BF] Szukam najlepszego rozwiązanias")
-        for s in self.population:
+        for s in self.all:
             loads = self.count_load(s)
             load = sum(loads)
             cfs = []
             i = 0
             for ld in loads:
-                cfs.append(ceil(ld/self.link_lambda[i]) - self.link_fibre[i])
+                cfs.append(ceil(ld/self.link_module[i]) - self.link_wire[i])
             cf = sum(cfs)
             if self.best_cost_function > cf:
                 self.best_cost_function = copy.deepcopy(cf)
@@ -109,21 +108,10 @@ class BT:
         print("[BF] Znalazlem")
         return
 
-    def count_load(self, population):
-        load = []
-        i = 0
-        for l in self.ld:
-            load.append(0)
-            for e in self.ld[l]:
-                load[-1] += population[e[0]-1][e[1]-1]
-            i += 1
-        return load
+    
 
     def link_in_demand(self, demands, links):
         self.ld = dict.fromkeys(list(range(1, len(links)+1)))
-
-
-
         for l in range(1, len(links)+1):
             self.ld[l] = []
         for l in range(1, len(links)+1):
@@ -140,6 +128,17 @@ class BT:
             print("LD size = ", self.ld[l])
         return self.ld
 
+
+    def count_load(self, all):
+        load = []
+        i = 0
+        for l in self.ld:
+            load.append(0)
+            for e in self.ld[l]:
+                load[-1] += all[e[0]-1][e[1]-1]
+            i += 1
+        return load
+
     def countSolutions(self):
         counter = 1
         for k in self.solutions.keys():
@@ -150,12 +149,12 @@ class BT:
     def write_all(self):
         fw_all = FileWriter('[BF]_ALL_POSSIBILITY')
         i = 1
-        for s in self.population:
+        for s in self.all:
             loads = self.count_load(s)
             cfs = []
             j = 0
             for ld in loads:
-                cfs.append(ceil(ld/self.link_lambda[j]) - self.link_fibre[j])
+                cfs.append(ceil(ld/self.link_module[j]) - self.link_wire[j])
                 j += 1
             cf = sum(cfs)
             line = 'Solution id: ' + str(i) + ' : ' + 'Link load: ' + str(sum(loads)) + ' Cost: ' \
@@ -172,7 +171,7 @@ class BT:
         i = 0
         for link in self.ld:
             line = str(link)+' '+str(loads[i])+' ' + \
-                str(ceil(loads[i]/self.link_lambda[i]))
+                str(ceil(loads[i]/self.link_module[i]))
             print(line)
             i += 1
         print('\n')
