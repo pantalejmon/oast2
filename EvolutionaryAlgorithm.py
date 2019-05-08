@@ -136,20 +136,22 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
                     second_offspring_genes.append(first_parent_genes[i])
 
             # Add offsprings to list
-            list_of_parents_and_offsprings.append(Chromosome(first_offspring_genes,0,0))  # ToDo: calculate fitness
-            list_of_parents_and_offsprings.append(Chromosome(second_offspring_genes,0,0))  # ToDo: calculate fitness
+            list_of_parents_and_offsprings.append(Chromosome(first_offspring_genes,0,0))  
+            list_of_parents_and_offsprings.append(Chromosome(second_offspring_genes,0,0))  
+
+            
 
     return list_of_parents_and_offsprings
 
 
 # Calculate and return fitness for passed Chromosome list of genes
 def calculate_fitness(links, demands, population):
-    # ToDo: Implementation
-    
     for chromosome in population:
         l = [0 for i in range(len(links))]
         y = [0 for i in range(len(links))]
         f = [0 for i in range(len(links))]
+        chromosome.fitness_ddap = 0
+        chromosome.fitness_dap = 0
         for d in range(len(chromosome.list_of_genes)):
             for p in range(len(chromosome.list_of_genes[d].list_of_alleles)):
                 for e in range(len(links)):
