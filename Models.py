@@ -3,8 +3,8 @@ class Link:
 
     # Values specific to instance
     def __init__(self, start_node, end_node, number_of_modules, module_cost, link_module):
-        self.start_node = start_node  # as String
-        self.end_node = end_node  # as String
+        self.start_node = start_node  # as Int
+        self.end_node = end_node  # as Int
         self.number_of_modules = number_of_modules  # as Int
         self.module_cost = module_cost  # as Int
         self.link_module = link_module  # as Int
@@ -66,6 +66,7 @@ class Gene:
 class Chromosome:
 
     # Values specific to instance
-    def __init__(self, list_of_genes, fitness):
+    def __init__(self, list_of_genes, fitness_dap, fitness_ddap):
         self.list_of_genes = list_of_genes  # as list of Int
-        self.fitness = fitness  # as Int
+        self.fitness_dap = fitness_dap  # as Int
+        self.fitness_ddap = fitness_ddap  # as Int

@@ -1,4 +1,5 @@
 import random
+from math import ceil
 
 from Models import Gene, Chromosome
 
@@ -51,11 +52,12 @@ def generate_chromosome(list_of_demands):
         list_of_genes.append(Gene(list_of_alleles, demand_volume))
 
     # Create and return chromosome instance
-    chromosome = Chromosome(list_of_genes, calculate_fitness())  # ToDo: implement, calculate and pass fitness
+    chromosome = Chromosome(list_of_genes, 0, 0)  # ToDo: implement, calculate and pass fitness
     return chromosome
 
 
-# Decide and perform mutation on passed chromosome based on mutation probability
+# Decide and perform mutation on passed chromosome based on mutation
+# probability
 def mutate_chromosome(chromosome, __mutation_probability=DEFAULT_MUTATION_PROBABILITY):
     # Check if passed probability is in range [0;1]
     if 0 < __mutation_probability <= 1:
@@ -78,19 +80,22 @@ def mutate_chromosome(chromosome, __mutation_probability=DEFAULT_MUTATION_PROBAB
             while gene.list_of_alleles[__first_gene_value_to_swap] <= 0:
                 __first_gene_value_to_swap = random.randint(0, __number_of_alleles - 1)
 
-            # When allele indexes are the same, choose new index for second allele index
+            # When allele indexes are the same, choose new index for second
+            # allele index
             while __second_gene_value_to_swap == __first_gene_value_to_swap:
                 __second_gene_value_to_swap = random.randint(0, __number_of_alleles - 1)
 
             # Shift one unit demand from one gene to another
             gene.list_of_alleles[__first_gene_value_to_swap] -= 1
-            gene.list_of_alleles[__second_gene_value_to_swap] += 1
+            gene.list_of_alleles[__second_gene_value_to_swap] += 1    
+            return True
         else:
-            return
+            return False
 
 
 # Perform crossover, return list with passed chromosomes and offsprings
-# ToDo: Best chromosomes should have higher probability to become parents (sort list of chromosomes by fitness?)
+# ToDo: Best chromosomes should have higher probability to become parents (sort
+# list of chromosomes by fitness?)
 def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CROSSOVER_PROBABILITY):
     # Check if passed probability is in range [0;1]
     if 0 < crossover_probability <= 1:
@@ -101,7 +106,8 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
 
     # Perform crossovers
     list_of_parents_and_offsprings = list()
-    # Add all chromosomes from passed list (parents), later we will be adding only the offsprings
+    # Add all chromosomes from passed list (parents), later we will be adding
+    # only the offsprings
     list_of_parents_and_offsprings += list_of_chromosomes
 
     while len(list_of_chromosomes) >= 2:
@@ -119,29 +125,54 @@ def crossover_chromosomes(list_of_chromosomes, crossover_probability=DEFAULT_CRO
             for i in range(0, len(first_parent_genes)):
                 # Decide which gene is taken from which parent
                 if get_random_boolean_based_on_probability(0.5):
-                    # First offspring gets gene from first parent, second offspring from second parent
+                    # First offspring gets gene from first parent, second
+                    # offspring from second parent
                     first_offspring_genes.append(first_parent_genes[i])
                     second_offspring_genes.append(second_parent_genes[i])
                 else:
-                    # First offspring gets gene from second parent, second offspring from first parent
+                    # First offspring gets gene from second parent, second
+                    # offspring from first parent
                     first_offspring_genes.append(second_parent_genes[i])
                     second_offspring_genes.append(first_parent_genes[i])
 
             # Add offsprings to list
-            list_of_parents_and_offsprings.append(Chromosome(first_offspring_genes,
-                                                             calculate_fitness()))  # ToDo: calculate fitness
-            list_of_parents_and_offsprings.append(Chromosome(second_offspring_genes,
-                                                             calculate_fitness()))  # ToDo: calculate fitness
+            list_of_parents_and_offsprings.append(Chromosome(first_offspring_genes,0,0))  # ToDo: calculate fitness
+            list_of_parents_and_offsprings.append(Chromosome(second_offspring_genes,0,0))  # ToDo: calculate fitness
 
     return list_of_parents_and_offsprings
 
 
 # Calculate and return fitness for passed Chromosome list of genes
-def calculate_fitness():
+def calculate_fitness(links, demands, population):
     # ToDo: Implementation
-    return 5
+    
+    for chromosome in population:
+        l = [0 for i in range(len(links))]
+        y = [0 for i in range(len(links))]
+        f = [0 for i in range(len(links))]
+        for d in range(len(chromosome.list_of_genes)):
+            for p in range(len(chromosome.list_of_genes[d].list_of_alleles)):
+                for e in range(len(links)):
+                    tmp = chromosome.list_of_genes[d].list_of_alleles[p]
+                    if check_link_in_demand(e+1, demands[d], p):
+                        l[e] += chromosome.list_of_genes[d].list_of_alleles[p]
+        for e in range(len(links)):
+            y[e] = ceil(l[e]/links[e].link_module)
+            f[e] = l[e] - links[e].number_of_modules*links[e].module_cost
+            chromosome.fitness_ddap += y[e] * links[e].module_cost
+        chromosome.fitness_dap = max(f)
+
 
 
 # Get boolean value based on passed probability [0-1]
 def get_random_boolean_based_on_probability(probability):
     return random.random() < probability
+
+
+# Check if given link is in demand
+def check_link_in_demand(link, demand, p):
+    path = demand.list_of_demand_paths[p]
+    if str(link) in path.link_id_list:
+            return True
+    else:
+        return False   
